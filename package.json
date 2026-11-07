@@ -9,8 +9,9 @@
     "mobile": "pnpm --filter @lonceng/mobile start",
     "db:generate": "pnpm --filter @lonceng/db generate",
     "db:migrate": "pnpm --filter @lonceng/db migrate",
-    "db:seed": "pnpm --filter @lonceng/db seed",
+    "db:seed": "pnpm --filter @lonceng/core seed",
     "test": "pnpm -r --if-present test",
-    "typecheck": "pnpm -r --if-present typecheck"
+    "typecheck": "pnpm -r --if-present typecheck",
+    "db:seed:demo": "pnpm --filter @lonceng/core seed --demo"
   }
 }
