@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f4f5fb;
+  --surface: #ffffff;
+  --surface-2: #f6f7fc;
+  --border: #e9ebf3;
+  --ink: #171a2c;
+  --ink-2: #5c6178;
+  --ink-3: #8d92a8;
+  --brand: #4f46e5;
+  --brand-ink: #ffffff;
+  --brand-soft: #eceafd;
+  --brand-text: #4338ca;
+  --good: #15803d;
+  --good-soft: #e3f6ea;
+  --warn: #a16207;
+  --warn-soft: #fdf3d7;
+  --bad: #c62828;
+  --bad-soft: #fde8e8;
+  --info: #1d6fc4;
+  --info-soft: #e3effb;
+  --shadow: 0 1px 2px rgb(23 26 44 / 0.03), 0 8px 24px rgb(23 26 44 / 0.04);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1120;
+  --surface: #181b2e;
+  --surface-2: #20243a;
+  --border: #2b2f47;
+  --ink: #eef0f8;
+  --ink-2: #aab0c6;
+  --ink-3: #7e849c;
+  --brand: #7c74f5;
+  --brand-ink: #ffffff;
+  --brand-soft: #2a2856;
+  --brand-text: #b4aefb;
+  --good: #5fd08a;
+  --good-soft: #17362a;
+  --warn: #eec25a;
+  --warn-soft: #3b3115;
+  --bad: #f58a8a;
+  --bad-soft: #421f24;
+  --info: #7fb9f2;
+  --info-soft: #1b3148;
+  --shadow: none;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-text: var(--brand-text);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --shadow-card: var(--shadow);
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+dialog::backdrop {
+  background: rgb(15 17 32 / 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
