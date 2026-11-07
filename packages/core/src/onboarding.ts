@@ -114,3 +114,23 @@ export async function confirmActivation(db: Db, input: { identifier: string; cod
   });
   return user;
 }
+
+/**
+ * Finds or creates the login behind a guardian. One account can span several schools
+ * (MW-02), so an existing user with the same phone or email is reused.
+ */
+export async function ensureGuardianUser(
+  tx: Pick<Db, "select" | "insert">,
+  input: { schoolId: string; name: string; phone?: string | null; email?: string | null },
+) {
+  const phone = input.phone ? normalizePhone(input.phone) : null;
+  const email = input.email?.trim().toLowerCase() || null;
+  if (!phone && !email) return null;
+  const [existing] = await tx
+    .select()
+    .from(users)
+    .where(or(phone ? eq(users.phone, phone) : undefined, email ? eq(users.email, email) : undefined));
+  const user = existing ?? (await tx.insert(users).values({ name: input.name, phone, email }).returning())[0]!;
+  await tx.insert(memberships).values({ userId: user.id, schoolId: input.schoolId, role: "guardian" }).onConflictDoNothing();
+  return user;
+}
