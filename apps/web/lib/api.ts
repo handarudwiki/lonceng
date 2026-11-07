@@ -54,7 +54,8 @@ export async function requireApiSchool(request: Request, allowed?: Role[]) {
   const roles = rows.map((r) => r.role as Role);
   if (roles.length === 0 || (allowed && !roles.some((r) => allowed.includes(r)))) throw new ApiError(403, "Tidak punya akses");
   const [school] = await db().select().from(schools).where(eq(schools.id, schoolId));
-  return { user, school: school!, schoolId, roles };
+  if (school?.status !== "active") throw new ApiError(403, "Sekolah sedang ditangguhkan");
+  return { user, school, schoolId, roles };
 }
 
 export async function requireTeacher(request: Request) {

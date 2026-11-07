@@ -15,7 +15,7 @@ export async function scannerContext() {
   if (!user) return null;
   const all = await listMemberships(user.id);
   const wanted = jar.get("lonceng_school")?.value;
-  const eligible = all.filter((m) => can(m.roles, "manageAttendance"));
+  const eligible = all.filter((m) => can(m.roles, "manageAttendance") && m.school.status === "active");
   const active = eligible.find((m) => m.school.id === wanted) ?? eligible[0];
   if (!active) return null;
   return { schoolId: active.school.id, schoolName: active.school.name, timezone: active.school.timezone, deviceId: null, deviceName: "Perangkat utama" };

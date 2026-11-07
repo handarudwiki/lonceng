@@ -130,7 +130,7 @@ export async function requireSchool(permission: Permission = "webApp"): Promise<
   const user = await getSessionUser();
   if (!user) redirect("/masuk");
   const all = await listMemberships(user.id);
-  const eligible = all.filter((m) => can(m.roles, "webApp"));
+  const eligible = all.filter((m) => can(m.roles, "webApp") && m.school.status === "active");
   if (eligible.length === 0) redirect(user.isSuperAdmin ? "/backoffice" : "/masuk?error=tanpa-akses");
   const wanted = (await cookies()).get(SCHOOL_COOKIE)?.value;
   const active = eligible.find((m) => m.school.id === wanted) ?? eligible[0]!;

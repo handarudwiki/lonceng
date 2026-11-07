@@ -65,8 +65,9 @@ const hashOtp = (userId: string, code: string) => createHash("sha256").update(`$
 
 export type OtpSender = (destination: { email: string | null; phone: string | null }, code: string) => Promise<void>;
 
-/** No email/WhatsApp provider is wired yet; logging keeps activation usable in development. */
+/** No email/WhatsApp provider is wired yet. Codes are credentials, so they never reach production logs. */
 export const consoleOtpSender: OtpSender = async (destination, code) => {
+  if (process.env.NODE_ENV === "production") throw new Error("Penyedia OTP (email/WhatsApp) belum dikonfigurasi");
   console.info(`[otp] ${destination.email ?? destination.phone}: ${code}`);
 };
 

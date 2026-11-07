@@ -6,7 +6,7 @@ import { Pricing } from "@/components/pricing";
 import { buttonClass, Card } from "@/components/ui";
 import { db } from "@/lib/db";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const FEATURES = [
   { icon: QrCode, title: "Presensi gerbang", body: "Webcam, reader RFID/NFC, atau QR di ponsel guru. Hadir dan terlambat tercatat otomatis." },

@@ -49,6 +49,6 @@ export async function deviceFromToken(token: string | undefined) {
     .select({ device: scannerDevices, school: schools })
     .from(scannerDevices)
     .innerJoin(schools, eq(schools.id, scannerDevices.schoolId))
-    .where(and(eq(scannerDevices.tokenHash, hash(token)), isNull(scannerDevices.revokedAt), isNotNull(scannerDevices.pairedAt)));
+    .where(and(eq(scannerDevices.tokenHash, hash(token)), isNull(scannerDevices.revokedAt), isNotNull(scannerDevices.pairedAt), eq(schools.status, "active")));
   return row ?? null;
 }

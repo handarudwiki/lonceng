@@ -5,7 +5,7 @@ import { Card, EmptyState } from "@/components/ui";
 import { db } from "@/lib/db";
 
 export const metadata: Metadata = { title: "Sekolah mitra" };
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export default async function PartnersPage() {
   const rows = await db()
