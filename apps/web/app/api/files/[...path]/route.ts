@@ -1,5 +1,5 @@
 import { and, eq, or } from "drizzle-orm";
-import { disciplineRecords, guardians, guardianStudents, leaveRequests, memberships, people } from "@lonceng/db";
+import { announcements, disciplineRecords, guardians, guardianStudents, leaveRequests, memberships, people } from "@lonceng/db";
 import { bearerUser } from "@/lib/api";
 import { getSessionUser } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -12,6 +12,8 @@ async function allowed(userId: string, schoolId: string, relative: string) {
   const roles = rows.map((r) => r.role as Role);
   if (roles.length === 0) return false;
   if (can(roles, "webApp")) return true;
+  const [notice] = await db().select({ id: announcements.id }).from(announcements).where(and(eq(announcements.schoolId, schoolId), eq(announcements.attachmentPath, relative)));
+  if (notice) return true;
   const children = await db()
     .select({ id: guardianStudents.studentId })
     .from(guardianStudents)

@@ -48,6 +48,8 @@ import {
   submitLessonAttendance,
   violationPoints,
   issueDynamicQr,
+  studentSchedule,
+  teacherSchedule,
 } from "./index";
 
 const db = getDb();
@@ -396,6 +398,24 @@ describe("lessons", () => {
       now: at("07:20"),
     });
     expect(await db.select().from(lessonAttendance).where(eq(lessonAttendance.sessionId, session.sessionId))).toHaveLength(0);
+  });
+
+  it("MG-05 and MW-07: a schedule shows only that day, that teacher and that class", async () => {
+    const { schoolId, teacher, other, group, year, entry } = await lessonSetup();
+    const [tuesday] = await db.insert(lessonPeriods).values({ schoolId, dayOfWeek: 2, number: 1, startTime: "07:00", endTime: "07:45" }).returning();
+    const [monday2] = await db.insert(lessonPeriods).values({ schoolId, dayOfWeek: 1, number: 2, startTime: "07:45", endTime: "08:30" }).returning();
+    const shared = { schoolId, academicYearId: year.id, semester: 1, classGroupId: group.id, subjectId: entry.subjectId };
+    await db.insert(rosterEntries).values([
+      { ...shared, lessonPeriodId: tuesday!.id, teacherId: teacher.id },
+      { ...shared, lessonPeriodId: monday2!.id, teacherId: other.id },
+    ]);
+    const student = await makeStudent(schoolId, group.id);
+
+    const mine = await teacherSchedule(db, schoolId, teacher.id, at("07:10"));
+    expect(mine.map((r) => r.entryId)).toEqual([entry.id]);
+    expect(mine[0]!.canOpen).toBe(true);
+    expect(await studentSchedule(db, schoolId, group.id, student.id, "2026-11-09")).toHaveLength(2);
+    expect(await studentSchedule(db, schoolId, group.id, student.id, "2026-11-10")).toHaveLength(1);
   });
 
   it("WA-MK-01: monitoring reflects the running session", async () => {

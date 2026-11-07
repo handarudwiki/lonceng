@@ -1,4 +1,4 @@
-import { and, asc, eq, gte, inArray, lte } from "drizzle-orm";
+import { and, asc, eq, gte, inArray, lte, type SQL } from "drizzle-orm";
 import {
   academicYears,
   classGroups,
@@ -34,7 +34,7 @@ async function getSchool(db: Pick<Db, "select">, schoolId: string) {
   return school;
 }
 
-function rosterQuery(db: Pick<Db, "select">, year: { id: string; semester: number }, weekday: number) {
+function rosterQuery(db: Pick<Db, "select">, year: { id: string; semester: number }, weekday: number, extra?: SQL) {
   return db
     .select({
       entryId: rosterEntries.id,
@@ -57,10 +57,10 @@ function rosterQuery(db: Pick<Db, "select">, year: { id: string; semester: numbe
         eq(rosterEntries.academicYearId, year.id),
         eq(rosterEntries.semester, year.semester),
         eq(lessonPeriods.dayOfWeek, weekday),
+        extra,
       ),
     )
-    .orderBy(asc(lessonPeriods.startTime))
-    .$dynamic();
+    .orderBy(asc(lessonPeriods.startTime));
 }
 
 async function sessionsFor(db: Pick<Db, "select">, entryIds: string[], date: string) {
@@ -77,7 +77,7 @@ export async function teacherSchedule(db: Db, schoolId: string, teacherId: strin
   const year = await activeYear(db, schoolId);
   if (!year) return [];
   const clock = localClock(now, school.timezone);
-  const rows = await rosterQuery(db, year, clock.isoWeekday).where(eq(rosterEntries.teacherId, teacherId));
+  const rows = await rosterQuery(db, year, clock.isoWeekday, eq(rosterEntries.teacherId, teacherId));
   const sessions = await sessionsFor(db, rows.map((r) => r.entryId), clock.date);
   return rows.map((r) => {
     const session = sessions.find((s) => s.rosterEntryId === r.entryId);
@@ -96,7 +96,7 @@ export async function teacherSchedule(db: Db, schoolId: string, teacherId: strin
 export async function studentSchedule(db: Db, schoolId: string, classGroupId: string, studentId: string, date: string) {
   const year = await activeYear(db, schoolId);
   if (!year) return [];
-  const rows = await rosterQuery(db, year, isoWeekday(date)).where(eq(rosterEntries.classGroupId, classGroupId));
+  const rows = await rosterQuery(db, year, isoWeekday(date), eq(rosterEntries.classGroupId, classGroupId));
   const sessions = await sessionsFor(db, rows.map((r) => r.entryId), date);
   const records =
     sessions.length === 0
