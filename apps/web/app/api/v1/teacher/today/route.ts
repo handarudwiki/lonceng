@@ -14,7 +14,7 @@ export const GET = handler(async (request) => {
   const [record] = await db().select().from(dailyAttendance).where(and(eq(dailyAttendance.personId, person.id), eq(dailyAttendance.date, date)));
   return {
     date,
-    person: { name: person.name, identifier: person.identifier, type: person.type },
+    person: { id: person.id, name: person.name, identifier: person.identifier, type: person.type },
     attendance: record
       ? { status: STATUS_LABELS[record.status], checkIn: formatTime(record.checkInAt, school.timezone), checkOut: formatTime(record.checkOutAt, school.timezone) }
       : null,
