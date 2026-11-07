@@ -94,7 +94,7 @@ export default async function AcademicPage() {
           remove={canEdit ? deleteGroup : undefined}
         />
       </section>
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <section>
           <h2 className="mb-2 text-lg font-extrabold">Tingkat</h2>
           <EntityManager

@@ -1,3 +1,4 @@
+export * from "./announcements";
 export * from "./attendance";
 export * from "./audit";
 export * from "./billing";
