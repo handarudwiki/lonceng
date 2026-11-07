@@ -1,0 +1,16 @@
+{
+  "name": "lonceng",
+  "private": true,
+  "packageManager": "pnpm@10.19.0",
+  "scripts": {
+    "dev": "pnpm --filter @lonceng/web dev",
+    "build": "pnpm --filter @lonceng/web build",
+    "worker": "pnpm --filter @lonceng/web worker",
+    "mobile": "pnpm --filter @lonceng/mobile start",
+    "db:generate": "pnpm --filter @lonceng/db generate",
+    "db:migrate": "pnpm --filter @lonceng/db migrate",
+    "db:seed": "pnpm --filter @lonceng/db seed",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck"
+  }
+}
